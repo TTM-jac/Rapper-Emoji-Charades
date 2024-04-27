@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rapper Emoji Charades</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+    #emoji {
+        font-size: 4rem;
+    }
+    #guess-input {
+        margin-top: 20px;
+        padding: 10px;
+        font-size: 1.2rem;
+    }
+    .button-container {
+        margin-top: 10px;
+    }
+    .game-button {
+        padding: 8px 20px;
+        font-size: 1rem;
+        cursor: pointer;
+        margin: 0 10px;
+    }
+    #score {
+        margin-top: 20px;
+        font-size: 1.2rem;
+    }
+</style>
+</head>
+<body>
+<h1>Rapper Emoji Charades</h1>
+<div id="emoji"></div>
+<input type="text" id="guess-input" placeholder="Enter your guess">
+<div class="button-container">
+    <button id="submit-btn" class="game-button">Submit</button>
+    <button id="skip-btn" class="game-button">Skip</button>
+</div>
+<div id="score">Correct: 0 / 0 | Wrong: 0</div>
+
+<script>
+    let emojis = ["🥤🌎", "❌❌❌💔", "👕🐐", "⛷🎭", "💔🚁", "🔥👱", "🍾💨", "🤏🔫", "🔵👱"];
+    let answers = ["Juice WRLD", "XXXTentacion", "Polo G", "Ski Mask the Slump God", "NLE Choppa", "Hott Headzz", "Pop Smoke", "Lil Uzi Vert", "Blueface"];
+
+    const emojiDisplay = document.getElementById('emoji');
+    const guessInput = document.getElementById('guess-input');
+    const submitBtn = document.getElementById('submit-btn');
+    const skipBtn = document.getElementById('skip-btn');
+    const scoreDisplay = document.getElementById('score');
+
+    let currentEmojiIndex;
+    let currentEmoji;
+    let currentAnswer;
+    let correctCount = 0;
+    let wrongCount = 0;
+
+    function initializeGame() {
+        currentEmojiIndex = 0;
+        currentEmoji = emojis[currentEmojiIndex];
+        currentAnswer = answers[currentEmojiIndex];
+        emojiDisplay.textContent = currentEmoji;
+        guessInput.value = '';
+        updateScore();
+    }
+
+    initializeGame();
+
+    submitBtn.addEventListener('click', function() {
+        const guess = guessInput.value.trim();
+        if (guess.toLowerCase() === currentAnswer.toLowerCase()) {
+            alert('Correct! Next emoji!');
+            correctCount++;
+            currentEmojiIndex++;
+            if (currentEmojiIndex >= emojis.length) {
+                alert('You have guessed all rappers!');
+                initializeGame();
+            } else {
+                currentEmoji = emojis[currentEmojiIndex];
+                currentAnswer = answers[currentEmojiIndex];
+                emojiDisplay.textContent = currentEmoji;
+                guessInput.value = '';
+            }
+        } else {
+            alert('Incorrect! Try again.');
+            wrongCount++;
+            guessInput.value = '';
+        }
+        updateScore();
+    });
+
+    skipBtn.addEventListener('click', function() {
+        shuffleRappers();
+        currentEmojiIndex++;
+        if (currentEmojiIndex >= emojis.length) {
+            alert('You have guessed all rappers!');
+            initializeGame();
+        } else {
+            currentEmoji = emojis[currentEmojiIndex];
+            currentAnswer = answers[currentEmojiIndex];
+            emojiDisplay.textContent = currentEmoji;
+            guessInput.value = '';
+        }
+    });
+
+    function shuffleRappers() {
+        // Fisher-Yates shuffle algorithm
+        for (let i = emojis.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [emojis[i], emojis[j]] = [emojis[j], emojis[i]];
+            [answers[i], answers[j]] = [answers[j], answers[i]];
+        }
+    }
+
+    function updateScore() {
+        scoreDisplay.textContent = `Correct: ${correctCount} / ${emojis.length} | Wrong: ${wrongCount}`;
+    }
+</script>
+</body>
+</html>
